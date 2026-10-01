@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1120" height="720" viewBox="0 0 1120 720">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#17181c"/><stop offset="1" stop-color="#101114"/></linearGradient>
+    <filter id="shadow"><feDropShadow dx="0" dy="10" stdDeviation="18" flood-opacity=".35"/></filter>
+  </defs>
+  <rect width="1120" height="720" fill="#f1f4f8"/>
+  <rect x="40" y="30" width="1040" height="660" rx="22" fill="url(#bg)" filter="url(#shadow)"/>
+  <circle cx="68" cy="58" r="7" fill="#ff5f57"/><circle cx="91" cy="58" r="7" fill="#febc2e"/><circle cx="114" cy="58" r="7" fill="#28c840"/>
+  <text x="62" y="112" fill="#f7f7f8" font-size="30" font-weight="700" font-family="PingFang SC, sans-serif">豆迹</text>
+  <text x="62" y="140" fill="#9ca3af" font-size="15" font-family="PingFang SC, sans-serif">找回你和豆包聊过的内容</text>
+  <rect x="817" y="91" width="110" height="42" rx="10" fill="#272a30"/><text x="842" y="118" fill="#e5e7eb" font-size="15" font-family="PingFang SC, sans-serif">✦ 引导找回</text>
+  <rect x="942" y="91" width="101" height="42" rx="10" fill="#272a30"/><text x="968" y="118" fill="#e5e7eb" font-size="15" font-family="PingFang SC, sans-serif">↻ 同步</text>
+  <rect x="62" y="162" width="981" height="50" rx="12" fill="#22252b" stroke="#3b82f6" stroke-width="2"/>
+  <text x="82" y="194" fill="#f3f4f6" font-size="17" font-family="PingFang SC, sans-serif">本地 语义搜索</text>
+  <text x="1004" y="194" fill="#60a5fa" font-size="20" font-family="PingFang SC, sans-serif">⌕</text>
+  <rect x="62" y="229" width="390" height="36" rx="9" fill="#202229"/>
+  <rect x="66" y="233" width="113" height="28" rx="7" fill="#3b82f6"/><text x="88" y="253" fill="white" font-size="13" font-family="PingFang SC, sans-serif">最佳轮次</text>
+  <text x="203" y="253" fill="#aeb4bf" font-size="13" font-family="PingFang SC, sans-serif">全部轮次</text><text x="309" y="253" fill="#aeb4bf" font-size="13" font-family="PingFang SC, sans-serif">只看问题</text><text x="389" y="253" fill="#aeb4bf" font-size="13" font-family="PingFang SC, sans-serif">只看回答</text>
+  <rect x="912" y="229" width="131" height="36" rx="9" fill="#202229"/><text x="938" y="253" fill="#d1d5db" font-size="13" font-family="PingFang SC, sans-serif">相关度优先⌄</text>
+  <rect x="62" y="282" width="981" height="166" rx="14" fill="#24262c" stroke="#343740"/>
+  <text x="84" y="315" fill="#f9fafb" font-size="19" font-weight="700" font-family="PingFang SC, sans-serif">本地知识库与语义搜索</text>
+  <rect x="928" y="298" width="91" height="26" rx="13" fill="#173a65"/><text x="950" y="316" fill="#93c5fd" font-size="12" font-family="PingFang SC, sans-serif">第 3 轮</text>
+  <text x="84" y="351" fill="#aeb4bf" font-size="14" font-family="PingFang SC, sans-serif">你问：如果用户只记得大概意思，怎样在本地找到原来的那次问答？</text>
+  <text x="84" y="381" fill="#d1d5db" font-size="14" font-family="PingFang SC, sans-serif">豆包：可以先建立问答轮次索引，再结合关键词召回与语义重排。完整内容保留在本机……</text>
+  <rect x="84" y="400" width="224" height="28" rx="6" fill="#323640"/><text x="98" y="419" fill="#fbbf24" font-size="12" font-family="PingFang SC, sans-serif">命中回答：本地 · 语义搜索</text>
+  <text x="737" y="419" fill="#b8bec8" font-size="13" font-family="PingFang SC, sans-serif">☆ 收藏　复制</text>
+  <rect x="871" y="393" width="148" height="37" rx="9" fill="#3b82f6"/><text x="897" y="417" fill="white" font-size="14" font-family="PingFang SC, sans-serif">打开并定位</text>
+  <rect x="62" y="464" width="981" height="145" rx="14" fill="#24262c" stroke="#343740"/>
+  <text x="84" y="497" fill="#f9fafb" font-size="19" font-weight="700" font-family="PingFang SC, sans-serif">个人知识管理产品设计</text>
+  <rect x="928" y="480" width="91" height="26" rx="13" fill="#26384d"/><text x="950" y="498" fill="#cbd5e1" font-size="12" font-family="PingFang SC, sans-serif">第 7 轮</text>
+  <text x="84" y="533" fill="#aeb4bf" font-size="14" font-family="PingFang SC, sans-serif">你问：轻量应用如何兼顾全文搜索和语义召回？</text>
+  <text x="84" y="563" fill="#d1d5db" font-size="14" font-family="PingFang SC, sans-serif">豆包：日常检索优先走本地文本索引，只在记忆模糊时按需调用本机模型……</text>
+  <rect x="871" y="552" width="148" height="37" rx="9" fill="#3a3d45"/><text x="897" y="576" fill="#f3f4f6" font-size="14" font-family="PingFang SC, sans-serif">打开并定位</text>
+  <line x1="62" y1="638" x2="1043" y2="638" stroke="#30333a"/>
+  <text x="62" y="667" fill="#8d95a2" font-size="13" font-family="PingFang SC, sans-serif">同步完成：4 个演示对话，18 条消息 · 所有检索均在本机完成</text>
+</svg>

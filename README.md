@@ -1,58 +1,160 @@
-# Douji (豆迹)
+# 豆迹（Douji）
 
-<p align="center"><img src="docs/assets/app-icon.png" width="160" alt="Douji app icon"></p>
+<p align="center"><img src="docs/assets/app-icon.png" width="160" alt="豆迹应用图标"></p>
 
-<p align="center">A lightweight, local-first macOS companion for finding a forgotten question or answer in your Doubao conversation history — and jumping back to the exact turn.</p>
+<p align="center"><strong>把“我以前好像问过”变成“就是这一轮”。</strong></p>
+
+<p align="center">豆迹是一款轻量、隐私优先的 macOS 豆包对话检索工具。它把豆包历史会话整理成本地索引，支持模糊搜索、高级组合搜索和大模型引导找回，并能从结果直接返回原对话、尽可能定位并高亮命中的问题或答案。</p>
 
 <p align="center">
   <img alt="macOS 14+" src="https://img.shields.io/badge/macOS-14%2B-111111?logo=apple">
   <img alt="Swift 6" src="https://img.shields.io/badge/Swift-6-F05138?logo=swift&logoColor=white">
-  <img alt="License MIT" src="https://img.shields.io/badge/license-MIT-2563EB">
-  <img alt="Local first" src="https://img.shields.io/badge/data-local--first-16A34A">
+  <img alt="MIT License" src="https://img.shields.io/badge/license-MIT-2563EB">
+  <img alt="本地优先" src="https://img.shields.io/badge/数据-本地优先-16A34A">
 </p>
 
-![Douji interface preview with sample data](docs/assets/app-preview.svg)
+> 下方界面图均为中文界面，并使用合成演示数据，不包含任何真实用户对话。
 
-## Why Douji?
+## 产品界面
 
-Doubao can contain hundreds of useful conversations, but remembering *where* a particular idea appeared is difficult. Douji builds a private local index, searches at question-and-answer-turn level, and opens the original Doubao chat at the matching message.
+### 1. 直接搜索：从一句模糊记忆找到具体问答
 
-Douji is intentionally small: it is a native SwiftUI app, not an Electron wrapper, and it has no server, account, analytics, or telemetry.
+![豆迹中文普通搜索界面](docs/assets/search-cn.svg)
 
-## Features
+输入仍记得的词、短句或答案片段，豆迹会同时检索对话标题、你的问题和豆包回答。结果按“问答轮次”展示，而不是只列出一串看不出关系的对话。
 
-- **Turn-level fuzzy search** across your questions, Doubao answers, and conversation titles.
-- **Advanced search** with up to six AND / OR / NOT rules, per-rule scope, and fuzzy or exact matching.
-- **Open and locate**: opens the original chat, scans Doubao's virtual message list, scrolls to the matching turn or paragraph, and highlights it.
-- **Guided recall**: a local `qwen3:8b` model asks narrowing questions when you only remember a vague direction.
-- **Free-form refinement**: answers such as “neither of these” work; choices are not a closed questionnaire.
-- **Result controls**: best turn or every turn, relevance/recent sorting, field filters, favorites, and recent searches.
-- **Incremental sync** for new and recently active conversations, plus full sync.
-- **Markdown export** for one question-and-answer turn and **JSON import** for offline use.
+### 2. 高级搜索：像知网一样组合多条线索
 
-## How it works
+![豆迹中文高级搜索界面](docs/assets/advanced-search-cn.svg)
 
-![Douji local-first architecture](docs/assets/architecture.svg)
+当一个关键词不够时，可用“且 / 或 / 不含”组合最多 6 条规则，并分别指定搜索范围与匹配方式。例如：问题中包含“数字化转型”，回答中还提到“供应链韧性”，同时排除“案例研究”。
 
-1. `doubao-cli` reads local Doubao desktop sessions.
-2. Douji normalizes conversations into question-and-answer turns.
-3. The index is stored at `~/Library/Application Support/DoubaoRecall/index.json`.
-4. Searches run locally in the Swift app.
-5. “Open and locate” uses Doubao's local CDP endpoint to reveal the matching DOM message.
-6. Guided Recall optionally sends short candidate excerpts only to a local Ollama server.
+### 3. 引导找回：只记得大概方向，也能逐步缩小范围
 
-## Requirements
+![豆迹中文引导找回界面](docs/assets/guided-recall-cn.svg)
 
-- macOS 14 or later
-- The official Doubao desktop app, signed in
-- Node.js 22 or later
+如果你连关键词都记不清，豆迹可以调用本机 `qwen3:8b`，根据候选摘要继续追问。用户既能点击建议选项，也能自由回答“都不是”“更像第二个，但不是论文”“大概是去年”等自然语言，系统会据此重新判断，而不是把用户困在固定问卷里。
+
+## 豆迹解决什么问题
+
+豆包擅长生成内容，但历史回查经常存在几个困难：只记得内容意思、不记得原句；搜索结果以整段会话为单位，难以判断具体命中位置；一个宽泛关键词会带出大量弱相关对话；打开会话后又落到最底部，还要手动翻找。
+
+豆迹专门补齐“历史知识找回”这一环：
+
+- 把长对话拆成连续的“用户问题 + 豆包回答”检索单元。
+- 不只判断哪个对话相关，还告诉你命中了第几轮、命中的是问题还是回答。
+- 用组合条件和引导式追问处理记忆模糊、关键词不足的情况。
+- 从搜索结果返回豆包原会话，并尝试滚动到对应轮次、短暂高亮命中文本。
+- 所有索引和检索默认留在本机，不建立豆迹云端账号。
+
+## 核心功能详解
+
+### 问答轮次级模糊搜索
+
+- 同时搜索对话标题、用户问题与豆包回答。
+- 中文分词、连续文本、英文单词和数字都可参与匹配。
+- 支持“最佳轮次”和“全部轮次”两种结果粒度。
+- 每条结果显示对话标题、轮次、问题摘要、回答摘要与命中片段。
+- 可按相关度或最近时间排序，并进一步限定“只搜问题”或“只搜回答”。
+- 对同一对话中的重复结果做聚合，减少无关卡片淹没真正命中项。
+
+### 高级组合搜索
+
+每条条件都由四部分组成：逻辑关系、字段范围、匹配方式和关键词。
+
+| 条件 | 用途 |
+| --- | --- |
+| 且（AND） | 多条线索必须同时出现，用于精确收窄 |
+| 或（OR） | 任意线索出现即可，用于处理同义词或不确定表述 |
+| 不含（NOT） | 排除明确无关的主题、项目或时间线索 |
+| 全部 / 问题 / 回答 / 标题 | 指定线索可能出现的位置 |
+| 模糊 / 精确 | 容忍近似表达，或要求完整文本出现 |
+
+最多可以添加 6 条规则。条件会在同一问答轮次的语境中计算，避免“关键词 A 在第 1 轮、关键词 B 在第 30 轮”却被误认为同一次命中。
+
+### 本地大模型引导找回
+
+- 适合只记得主题、用途、语气或大概时间，而记不住关键词的场景。
+- 首先用本地检索生成少量候选，再由本机 Ollama 中的 `qwen3:8b` 生成区分度更高的追问。
+- 支持建议选项和自由输入，不要求用户接受系统给出的二选一。
+- “都不是”“不确定”“可能更早”“是我问的，不是它回答的”等回答会成为下一轮检索线索。
+- 每轮都会缩小、调整或重排候选，直到聚焦到具体问答。
+- 最多只向 `127.0.0.1:11434` 发送 12 条短候选摘要；完整历史不会上传到云端。
+
+### 打开原对话并定位命中轮次
+
+点击“打开并定位”后，豆迹会：
+
+1. 打开对应的豆包原会话；
+2. 等待页面与虚拟消息列表加载；
+3. 根据消息标识、轮次和文本锚点寻找目标；
+4. 必要时分段滚动并继续扫描尚未渲染的消息；
+5. 将目标滚动到可视区域，并短暂高亮命中问题或答案。
+
+这比单纯打开会话链接更进一步。定位依赖豆包桌面端当前页面结构；若豆包升级导致结构变化，豆迹仍会打开正确会话，但定位适配可能需要同步更新。
+
+### 增量同步与完整同步
+
+- 点击“同步”后，新出现的对话和近期更新的对话会被重新纳入索引。
+- 日常使用优先增量同步，减少等待和资源占用。
+- 当历史缺失、豆包升级或索引异常时，可执行完整同步，重新读取全部可见历史。
+- 状态栏会显示同步到的对话数和消息数，便于确认数据是否完整。
+- 支持导入 JSON，便于离线测试、迁移或使用其他采集方式。
+
+### 搜索结果与个人工作流
+
+- 收藏重要问答，建立跨对话的个人知识入口。
+- 复制命中片段，快速带回文档、笔记或新的提问中。
+- 导出单个问答轮次为 Markdown，而不是导出整段冗长会话。
+- 保留最近搜索，方便重复查找常用主题。
+- 原始会话仍由豆包管理；豆迹只做索引、检索和跳转，不修改对话内容。
+
+## 与豆包原生能力的区别
+
+| 能力 | 豆包原生使用方式 | 豆迹 |
+| --- | --- | --- |
+| 检索单位 | 通常以会话为主要入口 | 精确到某个问题或某段回答 |
+| 模糊记忆 | 依赖用户先想起合适关键词 | 本地模型通过对话逐步帮用户回忆 |
+| 多线索组合 | 难以表达 AND / OR / NOT | 最多 6 条字段级组合条件 |
+| 结果解释 | 需要进入会话自行判断 | 直接显示轮次、命中字段和上下文 |
+| 打开结果 | 进入会话后可能仍需长距离翻找 | 尝试定位并高亮具体命中轮次 |
+| 数据处理 | 平台内功能 | 本地索引、本地搜索、无豆迹云服务 |
+| 知识复用 | 以聊天记录浏览为主 | 收藏、复制、单轮 Markdown 导出 |
+
+豆迹不是豆包客户端的替代品，也不负责生成回答。它只把豆包较难完成的“跨历史、细粒度、可解释地找回旧知识”做得更轻、更快。
+
+## 工作原理
+
+![豆迹本地优先架构](docs/assets/architecture.svg)
+
+1. `doubao-cli` 从已登录的豆包桌面端读取本地可访问的会话。
+2. 豆迹将消息归一化，并整理成问答轮次。
+3. 索引保存在 `~/Library/Application Support/DoubaoRecall/index.json`。
+4. 普通搜索、高级搜索、收藏和排序均在 Swift 应用内本地执行。
+5. “打开并定位”通过豆包本地 CDP 接口打开原会话并查找目标 DOM 消息。
+6. 引导找回为可选能力，只访问本机 Ollama 服务。
+
+## 为什么它足够轻量
+
+- 原生 SwiftUI 应用，不是 Electron 网页套壳。
+- 不运行豆迹云端服务，不需要注册豆迹账号。
+- 索引是本地 JSON，便于查看、备份和迁移。
+- 普通搜索不启动大模型；只有用户进入“引导找回”时才调用 Ollama。
+- 增量同步只处理新增和近期变化的会话。
+- 不内置庞大模型文件，`qwen3:8b` 完全由用户按需安装。
+
+## 系统要求
+
+- macOS 14 或更高版本
+- 已登录的官方豆包桌面客户端
+- Node.js 22 或更高版本
 - [`doubao-cli`](https://github.com/Fullstop000/doubao-cli)
-- Optional: [Ollama](https://ollama.com/) with `qwen3:8b`
-- Xcode Command Line Tools only when building from source
+- 可选：[Ollama](https://ollama.com/) 与 `qwen3:8b`
+- 从源码构建时需要 Xcode Command Line Tools
 
-## Install for everyday use
+## 安装与使用
 
-### 1. Install the local bridge
+### 1. 安装本地桥接工具
 
 ```bash
 brew install node@22
@@ -60,24 +162,23 @@ npm install --global doubao-cli
 doubao --version
 ```
 
-Douji also recognizes an isolated installation at `~/.local/doubao-recall`.
+豆迹也会识别安装在 `~/.local/doubao-recall` 的隔离版本。
 
-### 2. Install Douji
+### 2. 安装豆迹
 
-Download the latest release archive, unzip it, and drag `豆迹.app` to `/Applications`.
+从 [Releases](https://github.com/VincesHu01/douji/releases) 下载最新压缩包，解压后把“豆迹.app”拖入“应用程序”。开发版采用临时签名；若 macOS 首次阻止启动，请在“系统设置 → 隐私与安全性”中确认你信任该构建，再重新打开。
 
-Development builds are ad-hoc signed. If macOS blocks the first launch, open **System Settings → Privacy & Security**, confirm that you trust this locally built app, then open it again. Never bypass a warning for a build you do not trust.
+### 3. 第一次同步
 
-### 3. Build the local index
+1. 打开豆包并保持登录。
+2. 打开豆迹，点击右上角“同步”。
+3. 等待底部状态栏显示已同步的对话数和消息数。
+4. 输入记得的词句，或进入“高级搜索”“引导找回”。
+5. 在结果中点击“打开并定位”。
 
-1. Open Doubao and keep it signed in.
-2. Open Douji and click **Sync Doubao**.
-3. Search for any fragment you remember.
-4. Click **Open and locate**.
+以后新增对话后，再点击一次“同步”，新对话就会进入豆迹索引。无需删除旧索引，也不必每次执行完整同步。
 
-Future conversations are included the next time you click **Sync**. Use **Full sync** to re-read all history.
-
-### 4. Enable Guided Recall (optional)
+### 4. 启用引导找回（可选）
 
 ```bash
 brew install ollama
@@ -85,9 +186,9 @@ ollama pull qwen3:8b
 ollama serve
 ```
 
-The model runs locally. Douji sends at most 12 short candidate excerpts to the local Ollama endpoint.
+若 Ollama 未运行，普通搜索和高级搜索仍可正常使用。
 
-## Build from source
+## 从源码构建
 
 ```bash
 git clone https://github.com/VincesHu01/douji.git
@@ -97,66 +198,61 @@ zsh scripts/build-app.sh
 open "dist/豆迹.app"
 ```
 
-Install the local build with:
+安装本地构建：
 
 ```bash
 ditto "dist/豆迹.app" "/Applications/豆迹.app"
 ```
 
-The build script compiles a release binary, creates a standard macOS app bundle, embeds the icon, and applies an ad-hoc signature. It does not access your Doubao data.
+构建脚本会编译 Release 二进制、创建标准 macOS App Bundle、嵌入图标并应用临时签名。构建过程不会读取你的豆包对话。
 
-## JSON import format
+## JSON 导入格式
 
 ```json
 {
   "conversations": [{
     "id": "conversation-id",
-    "title": "Local search notes",
+    "title": "本地语义搜索方案",
     "url": "https://www.doubao.com/chat/conversation-id",
     "updatedAt": "2026-05-12T08:30:00Z",
     "messages": [{
       "id": "message-id",
       "role": "user",
-      "text": "How can I search locally without uploading my history?",
+      "text": "怎样在不上传历史记录的情况下进行本地搜索？",
       "ordinal": 1
     }]
   }]
 }
 ```
 
-The importer also recognizes aliases such as `conversation_id`, `message_id`, `content`, `items`, and `sessions`.
+导入器也识别 `conversation_id`、`message_id`、`content`、`items`、`sessions` 等常见别名。
 
-## Privacy and security
+## 隐私与安全
 
-- Conversation data stays on your Mac.
-- There is no Douji cloud service, login, analytics SDK, or telemetry.
-- The local index is excluded from this repository and never enters a build.
-- Guided Recall is optional and talks only to `127.0.0.1:11434`.
-- Douji depends on Doubao's local desktop structure and `doubao-cli`; future Doubao updates may require adapter changes.
-- Review third-party dependencies before installing them.
+- 对话索引保存在你的 Mac，不上传到豆迹服务器——因为豆迹没有服务器。
+- 无账号系统、无统计分析 SDK、无遥测。
+- 本地索引已从 Git 仓库和构建产物中排除。
+- 引导找回只连接 `127.0.0.1:11434`，且可以完全不启用。
+- 请勿在公开 Issue 中上传真实对话导出；复现问题时请使用合成文本。
+- 豆迹依赖豆包桌面端页面结构和第三方 `doubao-cli`，安装前请自行审阅第三方依赖。
 
-## Current platform scope
+## 当前平台范围
 
-This repository currently ships the **macOS desktop app**. iOS and Android companion access is planned, not implemented. Mobile support needs explicit local pairing and permissions so a phone never receives the complete index by default.
+本仓库目前交付的是 **macOS 桌面版**。iOS 与 Android 伴侣端仍在规划中，尚未实现。未来移动端会优先采用明确授权的本地配对与最小数据同步，不会默认把完整对话索引发送到手机或云端。
 
-## Development
-
-```bash
-swift test --disable-sandbox
-swift run
-```
+## 项目结构
 
 ```text
-Sources/DoubaoRecall/       SwiftUI app, search, sync, guided recall
-Tests/DoubaoRecallTests/    Search, import, and regression tests
-Resources/                 Info.plist and icon assets
-fixtures/                  Synthetic sample conversations only
-scripts/build-app.sh        Local app bundle build
-docs/assets/                README illustrations
+Sources/DoubaoRecall/       SwiftUI 界面、搜索、同步、引导找回
+Tests/DoubaoRecallTests/    搜索、导入、定位相关回归测试
+Resources/                 Info.plist 与应用图标资源
+fixtures/                  仅包含合成演示对话
+scripts/build-app.sh        本地 App Bundle 构建脚本
+docs/assets/                README 中文界面图与架构图
 ```
 
-Contributions and reproducible bug reports are welcome. Do not attach real conversation exports to public issues; use synthetic text.
+欢迎提交贡献与可复现的问题报告。
 
-## License
+## 许可证与声明
 
-[MIT](LICENSE). “Doubao” is a trademark of its owner. Douji is an independent community project and is not affiliated with or endorsed by Doubao or ByteDance.
+[MIT License](LICENSE)。Doubao / 豆包为其权利人的商标。豆迹是独立社区项目，与豆包或字节跳动不存在隶属、授权或背书关系。
