@@ -15,25 +15,21 @@
   <img alt="Local first" src="https://img.shields.io/badge/data-local--first-16A34A">
 </p>
 
-> The screenshots below show the Chinese app interface with fully synthetic demonstration data. They do not contain real user conversations.
+> The screenshot below was captured from the real macOS application. The browser demo reproduces this interface and uses synthetic data only.
 
 ## Product tour
 
-### 1. Direct search: recover a specific exchange from a vague memory
+![Douji running on macOS with the real Chinese application interface](docs/assets/douji-real-app.png)
 
-![Douji direct search in the Chinese app interface](docs/assets/search-cn.svg)
+### 1. Direct search: recover a specific exchange from a vague memory
 
 Enter any word, phrase, or answer fragment you still remember. Douji searches conversation titles, your questions, and Doubao's answers at the same time. Results are presented as question-and-answer turns rather than a flat list of loosely related conversations.
 
 ### 2. Advanced search: combine multiple clues
 
-![Douji advanced search in the Chinese app interface](docs/assets/advanced-search-cn.svg)
-
 When one keyword is not enough, combine up to six AND, OR, and NOT rules. Every rule can target a different field and use fuzzy or exact matching. For example, require “digital transformation” in the question and “supply-chain resilience” in the answer while excluding “case study.”
 
 ### 3. Guided Recall: narrow down the target through conversation
-
-![Douji Guided Recall in the Chinese app interface](docs/assets/guided-recall-cn.svg)
 
 If you cannot remember useful keywords, Douji can use a local `qwen3:8b` model to ask discriminating follow-up questions based on a small candidate set. You may click a suggestion or reply freely with phrases such as “neither,” “closer to the second one, but it was not a paper,” or “probably sometime last year.” Guided Recall treats those replies as new evidence instead of forcing you through a closed questionnaire.
 
@@ -274,7 +270,7 @@ Sources/DoubaoRecall/       SwiftUI interface, search, sync, and Guided Recall
 Tests/DoubaoRecallTests/    Search, import, navigation, and regression tests
 Resources/                 Info.plist and application icon resources
 scripts/build-app.sh        Local application bundle build script
-docs/assets/                Chinese interface screenshots and architecture image
+docs/assets/                Real application screenshot, icon, and architecture image
 ```
 
 Contributions and reproducible bug reports are welcome.

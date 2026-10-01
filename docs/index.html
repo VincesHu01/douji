@@ -3,90 +3,95 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <meta name="theme-color" content="#111318">
-  <meta name="description" content="豆迹可交互演示：使用合成数据体验轮次级搜索、高级搜索与逐层梳理。">
-  <title>豆迹 · 交互演示</title>
-  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='15' fill='%23111318'/%3E%3Cpath d='M17 18h30v8H27v7h16v8H27v6H17z' fill='%2360a5fa'/%3E%3C/svg%3E">
-  <link rel="stylesheet" href="./demo.css">
+  <meta name="theme-color" content="#1c1c1e">
+  <meta name="description" content="豆迹真实界面交互演示：使用合成数据体验搜索、高级搜索和引导找回。">
+  <title>豆迹 · 真实界面演示</title>
+  <link rel="icon" type="image/png" href="./assets/app-icon.png">
+  <link rel="stylesheet" href="./demo.css?v=real-ui-2">
 </head>
 <body>
-  <main class="shell">
-    <header class="topbar">
-      <div class="brand">
-        <img src="./assets/app-icon.png" alt="" width="44" height="44">
+  <main class="app-window">
+    <div class="titlebar">
+      <div class="traffic" aria-hidden="true"><i></i><i></i><i></i></div>
+      <span>豆迹</span>
+    </div>
+
+    <section class="app-content">
+      <header class="app-head">
         <div><h1>豆迹</h1><p>找回你和豆包聊过的内容</p></div>
-      </div>
-      <div class="demo-flag"><span></span>安全演示 · 合成数据</div>
-      <a class="github-link" href="https://github.com/VincesHu01/douji">查看源码</a>
-    </header>
-
-    <nav class="tabs" aria-label="演示功能">
-      <button class="tab active" data-view="search">快速搜索</button>
-      <button class="tab" data-view="advanced">高级搜索</button>
-      <button class="tab" data-view="guided">逐层梳理</button>
-    </nav>
-
-    <section id="search" class="view active" aria-labelledby="search-title">
-      <div class="intro-row">
-        <div><p class="eyebrow">TURN-LEVEL SEARCH</p><h2 id="search-title">从一句模糊记忆，找到具体问答</h2></div>
-        <button class="secondary" id="loadExample">试试示例</button>
-      </div>
-      <label class="searchbox">
-        <span class="sr-only">搜索对话</span>
-        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m21 21-4.4-4.4m2.4-5.1A7.5 7.5 0 1 1 4 11.5a7.5 7.5 0 0 1 15 0Z"/></svg>
-        <input id="query" type="search" placeholder="输入记得的词、短句或答案片段…" autocomplete="off">
-        <kbd>⌘ K</kbd>
-      </label>
-      <div class="controls">
-        <div class="segmented" role="group" aria-label="搜索范围">
-          <button class="active" data-scope="all">全部</button>
-          <button data-scope="question">只看问题</button>
-          <button data-scope="answer">只看回答</button>
+        <div class="head-actions">
+          <button id="guidedToggle" class="mac-button">✦　引导找回</button>
+          <button id="syncButton" class="mac-button">↻　同步</button>
         </div>
-        <span id="resultCount" class="count">4 个演示对话</span>
-      </div>
-      <div id="results" class="results" aria-live="polite"></div>
+      </header>
+
+      <section id="searchView">
+        <div class="search-row">
+          <label class="sr-only" for="query">搜索对话</label>
+          <input id="query" type="search" placeholder="描述你记得的问题或回答…" autocomplete="off">
+          <button id="advancedToggle" class="mac-button">高级搜索</button>
+        </div>
+
+        <div class="scope-row">
+          <strong>搜索范围</strong>
+          <div class="segmented" role="group" aria-label="搜索范围">
+            <button class="active" data-scope="all">全部</button>
+            <button data-scope="question">我的问题</button>
+            <button data-scope="answer">豆包回答</button>
+            <button data-scope="title">对话标题</button>
+          </div>
+          <button class="favorite" aria-label="收藏结果">☆ <span>0</span></button>
+        </div>
+
+        <div class="filter-row">
+          <select aria-label="结果粒度"><option>▣ 每个对话 1 条</option><option>全部匹配轮次</option></select>
+          <select aria-label="结果排序"><option>⇅ 相关度优先</option><option>最近更新优先</option></select>
+          <button class="history-button">◴ 最近搜索　⌄</button>
+        </div>
+
+        <div id="advancedPanel" class="advanced-panel" hidden>
+          <div class="advanced-title"><strong>高级搜索：组合多个记忆线索</strong><span>最多 6 条</span></div>
+          <div id="rules"></div>
+          <button id="addRule" class="text-button">＋ 添加条件</button>
+        </div>
+
+        <div id="results" class="result-area" aria-live="polite">
+          <div class="empty-state">
+            <div class="quote-icon">❞</div>
+            <h2>可以开始搜索了</h2>
+            <p>已索引 44 个对话、218 条消息。</p>
+            <div><button id="exampleButton" class="mac-button">同步豆包</button><button id="importButton" class="mac-button">导入 JSON</button></div>
+          </div>
+        </div>
+      </section>
+
+      <section id="guidedView" hidden>
+        <div class="guide-head"><button id="backButton" class="mac-button">‹ 返回搜索</button><strong>逐层梳理</strong></div>
+        <div class="local-note">本演示使用合成候选，不连接模型，也不会上传内容。</div>
+        <div id="chat" class="chat" aria-live="polite"></div>
+        <form id="guideForm" class="composer">
+          <label class="sr-only" for="guideInput">自由回答</label>
+          <input id="guideInput" placeholder="说说你大概记得什么…" autocomplete="off">
+          <button class="mac-button primary" type="submit">发送</button>
+        </form>
+        <div id="suggestions" class="suggestions"></div>
+      </section>
     </section>
 
-    <section id="advanced" class="view" aria-labelledby="advanced-title">
-      <div class="intro-row">
-        <div><p class="eyebrow">BOOLEAN RETRIEVAL</p><h2 id="advanced-title">组合多个记忆线索</h2></div>
-        <button class="secondary" id="advancedExample">载入示例条件</button>
-      </div>
-      <div class="rule-head"><span>关系</span><span>范围</span><span>匹配</span><span>关键词</span><span></span></div>
-      <div id="rules" class="rules"></div>
-      <div class="advanced-actions">
-        <button class="secondary" id="addRule">＋ 添加条件</button>
-        <button class="primary" id="runAdvanced">开始搜索</button>
-      </div>
-      <div id="advancedResults" class="results compact" aria-live="polite"></div>
-    </section>
-
-    <section id="guided" class="view" aria-labelledby="guided-title">
-      <div class="intro-row">
-        <div><p class="eyebrow">GUIDED RECALL</p><h2 id="guided-title">不用先想出准确关键词</h2></div>
-        <button class="secondary" id="restartGuide">重新开始</button>
-      </div>
-      <div class="local-note"><span></span>演示中的追问在浏览器本地运行，不连接模型或上传内容</div>
-      <div id="chat" class="chat" aria-live="polite"></div>
-      <form id="guideForm" class="composer">
-        <label class="sr-only" for="guideInput">自由回答</label>
-        <input id="guideInput" placeholder="描述你还记得的主题、用途、时间或语气…" autocomplete="off">
-        <button class="primary" type="submit">发送</button>
-      </form>
-      <div id="suggestions" class="suggestions"></div>
-    </section>
+    <footer>
+      <div><b>已加载 44 个对话，218 条消息</b><span>上次同步：6 小时 13 分钟前</span></div>
+      <nav><button id="fullSync">完整同步</button><button>导入 JSON</button><a href="https://github.com/VincesHu01/douji">退出</a></nav>
+    </footer>
   </main>
 
   <template id="ruleTemplate">
     <div class="rule">
       <select aria-label="逻辑关系"><option value="and">且</option><option value="or">或</option><option value="not">不含</option></select>
       <select aria-label="搜索范围"><option value="all">全部</option><option value="question">问题</option><option value="answer">回答</option><option value="title">标题</option></select>
-      <select aria-label="匹配方式"><option value="fuzzy">模糊</option><option value="exact">精确</option></select>
-      <input aria-label="关键词" placeholder="输入关键词">
-      <button class="icon-button" aria-label="删除条件">×</button>
+      <input aria-label="关键词" placeholder="关键词">
+      <button class="remove-rule" aria-label="删除条件">×</button>
     </div>
   </template>
-  <script src="./demo.js"></script>
+  <script src="./demo.js?v=real-ui-2"></script>
 </body>
 </html>
