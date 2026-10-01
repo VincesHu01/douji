@@ -1,0 +1,26 @@
+{
+  "conversations": [
+    {
+      "id": "7527276490371694618",
+      "title": "本地知识库与语义搜索",
+      "url": "https://www.doubao.com/chat/7527276490371694618",
+      "updatedAt": "2026-05-12T08:30:00Z",
+      "messages": [
+        {
+          "id": "message-1",
+          "role": "user",
+          "text": "如果完全不上传服务器，语义搜索要怎么实现？",
+          "createdAt": "2026-05-12T08:30:00Z",
+          "ordinal": 1
+        },
+        {
+          "id": "message-2",
+          "role": "assistant",
+          "text": "可以在桌面端运行小型 embedding 模型，并将向量索引保存在本地。",
+          "createdAt": "2026-05-12T08:31:00Z",
+          "ordinal": 2
+        }
+      ]
+    }
+  ]
+}

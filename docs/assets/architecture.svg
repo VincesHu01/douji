@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1120" height="360" viewBox="0 0 1120 360" role="img" aria-labelledby="title desc">
+  <title id="title">Douji local-first architecture</title><desc id="desc">Doubao desktop data flows through a local bridge into Douji, with optional local Ollama guided recall.</desc>
+  <defs><marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L0,6 L9,3 z" fill="#60a5fa"/></marker></defs><rect width="1120" height="360" rx="28" fill="#0f172a"/>
+  <g font-family="-apple-system, BlinkMacSystemFont, sans-serif" text-anchor="middle">
+    <g transform="translate(45 76)"><rect width="220" height="126" rx="18" fill="#292524" stroke="#fb7185" stroke-width="2"/><text x="110" y="52" fill="#fff" font-size="20" font-weight="700">Doubao Desktop</text><text x="110" y="82" fill="#a8a29e" font-size="14">Local conversation data</text></g>
+    <g transform="translate(330 76)"><rect width="200" height="126" rx="18" fill="#172554" stroke="#60a5fa" stroke-width="2"/><text x="100" y="52" fill="#fff" font-size="20" font-weight="700">doubao-cli</text><text x="100" y="82" fill="#93c5fd" font-size="14">Sync + open bridge</text></g>
+    <g transform="translate(595 52)"><rect width="250" height="174" rx="18" fill="#1e293b" stroke="#38bdf8" stroke-width="2"/><text x="125" y="48" fill="#fff" font-size="22" font-weight="700">Douji</text><text x="125" y="79" fill="#bae6fd" font-size="14">Normalize · index · search</text><rect x="38" y="104" width="174" height="42" rx="10" fill="#0f172a"/><text x="125" y="131" fill="#e2e8f0" font-size="13">Local index.json</text></g>
+    <g transform="translate(910 76)"><rect width="165" height="126" rx="18" fill="#1f2937" stroke="#a78bfa" stroke-width="2"/><text x="82" y="46" fill="#fff" font-size="19" font-weight="700">Ollama</text><text x="82" y="74" fill="#c4b5fd" font-size="14">qwen3:8b</text><text x="82" y="98" fill="#9ca3af" font-size="12">Optional · local only</text></g>
+    <path d="M265 139 H325" stroke="#60a5fa" stroke-width="3" marker-end="url(#arrow)"/><path d="M530 139 H590" stroke="#60a5fa" stroke-width="3" marker-end="url(#arrow)"/><path d="M845 139 H905" stroke="#a78bfa" stroke-width="3" stroke-dasharray="7 7" marker-end="url(#arrow)"/>
+    <path d="M720 230 V292 H155 V208" fill="none" stroke="#60a5fa" stroke-width="3" marker-end="url(#arrow)"/><text x="438" y="318" fill="#93c5fd" font-size="14">Open the original chat and reveal the matching turn</text>
+  </g>
+</svg>

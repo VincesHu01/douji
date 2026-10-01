@@ -1,0 +1,9 @@
+.build/
+.build-test/
+dist/
+.swiftpm/
+*.xcodeproj/
+.DS_Store
+*.zip
+*.ips
+index.json
