@@ -423,14 +423,6 @@ final class IndexStore: ObservableObject {
     }
 
     private func indexURL(createDirectory: Bool = false) throws -> URL {
-        if let overridePath = ProcessInfo.processInfo.environment["DOUJI_INDEX_PATH"],
-           !overridePath.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
-            return URL(fileURLWithPath: overridePath)
-        }
-        if Bundle.main.bundleIdentifier == "local.doubao.recall.demo",
-           let demoURL = Bundle.main.url(forResource: "readme-demo-index", withExtension: "json") {
-            return demoURL
-        }
         let base = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask)[0]
         let directory = base.appendingPathComponent("DoubaoRecall", isDirectory: true)
         if createDirectory {

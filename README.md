@@ -271,7 +271,6 @@ This repository currently ships the **macOS desktop application**. iOS and Andro
 Sources/DoubaoRecall/       SwiftUI interface, search, sync, and Guided Recall
 Tests/DoubaoRecallTests/    Search, import, navigation, and regression tests
 Resources/                 Info.plist and application icon resources
-fixtures/                  Synthetic demonstration conversations only
 scripts/build-app.sh        Local application bundle build script
 docs/assets/                Chinese interface screenshots and architecture image
 ```
