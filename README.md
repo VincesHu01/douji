@@ -6,7 +6,7 @@
 
 <p align="center">Douji is a lightweight, privacy-first macOS companion for searching your Doubao conversation history. It builds a local index, supports fuzzy search, advanced multi-condition search, and model-assisted guided recall, then takes you back to the original conversation and attempts to reveal the exact matching question or answer.</p>
 
-<p align="center"><a href="https://vinceshu01.github.io/douji/"><strong>Try the interactive demo</strong></a> · <a href="https://github.com/VincesHu01/douji/releases">Download for macOS</a></p>
+<p align="center"><a href="https://htmlpreview.github.io/?https://raw.githubusercontent.com/VincesHu01/douji/main/docs/index.html"><strong>Try the interactive demo</strong></a> · <a href="https://github.com/VincesHu01/douji/releases">Download for macOS</a></p>
 
 <p align="center">
   <img alt="macOS 14+" src="https://img.shields.io/badge/macOS-14%2B-111111?logo=apple">
