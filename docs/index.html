@@ -4,10 +4,10 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="theme-color" content="#1c1c1e">
-  <meta name="description" content="豆迹真实界面交互演示：使用合成数据体验搜索、高级搜索和引导找回。">
+  <meta name="description" content="豆迹真实界面交互演示：浏览演示历史，体验轮次搜索、高级搜索、引导找回和精确定位。">
   <title>豆迹 · 真实界面演示</title>
   <link rel="icon" type="image/png" href="./assets/app-icon.png">
-  <link rel="stylesheet" href="./demo.css?v=real-ui-2">
+  <link rel="stylesheet" href="./demo.css?v=real-ui-3">
 </head>
 <body>
   <main class="app-window">
@@ -46,8 +46,10 @@
         <div class="filter-row">
           <select aria-label="结果粒度"><option>▣ 每个对话 1 条</option><option>全部匹配轮次</option></select>
           <select aria-label="结果排序"><option>⇅ 相关度优先</option><option>最近更新优先</option></select>
-          <button class="history-button">◴ 最近搜索　⌄</button>
+          <button id="historyToggle" class="history-button">▤ 演示历史　3</button>
         </div>
+
+        <div class="demo-guide"><span>先浏览演示历史，再用记得的线索搜索。</span><button id="guidedExample">一键体验完整流程</button></div>
 
         <div id="advancedPanel" class="advanced-panel" hidden>
           <div class="advanced-title"><strong>高级搜索：组合多个记忆线索</strong><span>最多 6 条</span></div>
@@ -59,8 +61,8 @@
           <div class="empty-state">
             <div class="quote-icon">❞</div>
             <h2>可以开始搜索了</h2>
-            <p>已索引 44 个对话、218 条消息。</p>
-            <div><button id="exampleButton" class="mac-button">同步豆包</button><button id="importButton" class="mac-button">导入 JSON</button></div>
+            <p>演示库包含 3 个对话、6 条消息。</p>
+            <div><button id="historyEmpty" class="mac-button">浏览演示历史</button><button id="exampleButton" class="mac-button primary">试用示例搜索</button></div>
           </div>
         </div>
       </section>
@@ -78,8 +80,22 @@
       </section>
     </section>
 
+    <div id="historyModal" class="sheet-backdrop" hidden>
+      <section class="sheet" role="dialog" aria-modal="true" aria-labelledby="historyTitle">
+        <div class="sheet-head"><div><strong id="historyTitle">演示历史对话</strong><span>点击任意线索即可带入搜索</span></div><button class="close-sheet" data-close="historyModal" aria-label="关闭">×</button></div>
+        <div id="historyList" class="history-list"></div>
+      </section>
+    </div>
+
+    <div id="locateModal" class="sheet-backdrop" hidden>
+      <section class="sheet locate-sheet" role="dialog" aria-modal="true" aria-labelledby="locateTitle">
+        <div class="sheet-head"><div><strong id="locateTitle">已打开原对话并定位</strong><span>蓝色边框表示豆迹找到的目标轮次</span></div><button class="close-sheet" data-close="locateModal" aria-label="关闭">×</button></div>
+        <div id="locatedConversation" class="located-conversation"></div>
+      </section>
+    </div>
+
     <footer>
-      <div><b>已加载 44 个对话，218 条消息</b><span>上次同步：6 小时 13 分钟前</span></div>
+      <div><b>演示库：3 个对话，6 条消息</b><span>公开知识片段与合成内容</span></div>
       <nav><button id="fullSync">完整同步</button><button>导入 JSON</button><a href="https://github.com/VincesHu01/douji">退出</a></nav>
     </footer>
   </main>
@@ -92,6 +108,6 @@
       <button class="remove-rule" aria-label="删除条件">×</button>
     </div>
   </template>
-  <script src="./demo.js?v=real-ui-2"></script>
+  <script src="./demo.js?v=real-ui-3"></script>
 </body>
 </html>

@@ -15,23 +15,49 @@
   <img alt="Local first" src="https://img.shields.io/badge/data-local--first-16A34A">
 </p>
 
-> The screenshot below was captured from the real macOS application. The browser demo reproduces this interface and uses synthetic data only.
+> The first two Douji screenshots and the Doubao locator screenshot below were captured during a real macOS run. The example uses a non-private, public-knowledge exchange about Geoffrey Hinton; the Doubao screenshot is cropped to exclude unrelated conversation titles. The browser demo contains a de-identified excerpt from this run plus synthetic examples and never reads a visitor's Doubao data.
 
 ## Product tour
 
+### 1. Start with a local conversation index
+
 ![Douji running on macOS with the real Chinese application interface](docs/assets/douji-real-app.png)
 
-### 1. Direct search: recover a specific exchange from a vague memory
+After synchronization, Douji reports how many conversations and messages are available locally. From here, the user can search directly, compose advanced conditions, or enter Guided Recall. The screenshot is the real Chinese application running on macOS, not a redesigned mockup.
+
+### 2. Direct search: recover a specific exchange from a vague memory
 
 Enter any word, phrase, or answer fragment you still remember. Douji searches conversation titles, your questions, and Doubao's answers at the same time. Results are presented as question-and-answer turns rather than a flat list of loosely related conversations.
 
-### 2. Advanced search: combine multiple clues
+The following real run uses three incomplete memories—“Geoffrey,” “Hinton,” and “backpropagation”—to recover a public-knowledge question. Douji identifies the conversation and reports that the hit is turn 4, while also showing enough of the question and answer to verify the result before leaving the app.
+
+![Real Douji search results for a public AI knowledge question](docs/assets/douji-search-real.jpg)
+
+### 3. Open the original conversation at the exact turn
+
+Selecting **Open and Locate** opens the original Doubao conversation, scrolls to the matched turn, and highlights the target with a blue outline. This is the actual Doubao result produced from the search above; the left conversation sidebar was deliberately removed from the screenshot so unrelated titles are not published.
+
+![Real Doubao conversation opened at the exact matched question](docs/assets/doubao-located-real.jpg)
+
+### 4. Advanced search: combine multiple clues
 
 When one keyword is not enough, combine up to six AND, OR, and NOT rules. Every rule can target a different field and use fuzzy or exact matching. For example, require “digital transformation” in the question and “supply-chain resilience” in the answer while excluding “case study.”
 
-### 3. Guided Recall: narrow down the target through conversation
+### 5. Guided Recall: narrow down the target through conversation
 
 If you cannot remember useful keywords, Douji can use a local `qwen3:8b` model to ask discriminating follow-up questions based on a small candidate set. You may click a suggestion or reply freely with phrases such as “neither,” “closer to the second one, but it was not a paper,” or “probably sometime last year.” Guided Recall treats those replies as new evidence instead of forcing you through a closed questionnaire.
+
+## Try the browser demo
+
+The [interactive demo](https://htmlpreview.github.io/?https://raw.githubusercontent.com/VincesHu01/douji/main/docs/index.html) now exposes its small history library instead of presenting an unexplained empty search box:
+
+1. Select **Demo History** to inspect all three conversations available to the demo.
+2. Choose **Use This Clue to Search** on any conversation, or select **Try Example Search** for the complete Geoffrey Hinton workflow.
+3. Edit the query, change the search scope, or add AND, OR, and NOT conditions in Advanced Search.
+4. Select **Open and Locate** on a result to see how Douji reveals the exact question-and-answer turn.
+5. Enter Guided Recall and type a free-form reply—including “neither”—to experience iterative narrowing.
+
+The browser version is an interface demonstration, not a web account. It cannot access the visitor's Doubao history and clearly labels its three records: one de-identified public-knowledge excerpt from the real run above and two synthetic examples. Real synchronization and external navigation remain desktop-only operations.
 
 ## The problem Douji solves
 
@@ -257,6 +283,7 @@ The importer also recognizes common aliases including `conversation_id`, `messag
 - The local index is excluded from the Git repository and application build artifacts.
 - Guided Recall connects only to `127.0.0.1:11434` and can remain completely disabled.
 - Never attach real conversation exports to public issues; use synthetic reproduction data.
+- This repository includes only cropped or de-identified public-knowledge demonstration material, never a conversation export or local index.
 - Douji depends on the Doubao desktop structure and the third-party `doubao-cli`. Review third-party dependencies before installing them.
 
 ## Current platform scope
@@ -270,7 +297,7 @@ Sources/DoubaoRecall/       SwiftUI interface, search, sync, and Guided Recall
 Tests/DoubaoRecallTests/    Search, import, navigation, and regression tests
 Resources/                 Info.plist and application icon resources
 scripts/build-app.sh        Local application bundle build script
-docs/assets/                Real application screenshot, icon, and architecture image
+docs/assets/                Real workflow screenshots, icon, and architecture image
 ```
 
 Contributions and reproducible bug reports are welcome.
