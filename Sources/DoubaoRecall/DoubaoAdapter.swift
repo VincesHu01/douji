@@ -100,7 +100,8 @@ struct DoubaoAdapter: Sendable {
         if isCLIAvailable() {
             let opened = await Task.detached(priority: .userInitiated) {
                 try? ensureCDP()
-                return runDoubao(["--app", "doubao", "sessions", "open", hit.conversationID]).status == 0
+                let result = runDoubao(["--app", "doubao", "sessions", "open", hit.conversationID])
+                return result.status == 0
             }.value
             guard opened else { return false }
             try? await Task.sleep(for: .milliseconds(900))
@@ -169,7 +170,7 @@ struct DoubaoAdapter: Sendable {
             if target != nil { break }
             try await Task.sleep(for: .milliseconds(200))
         }
-        guard let websocketURL = target?.webSocketDebuggerUrl.flatMap(URL.init(string:)) else { return false }
+        guard let websocketURL = target?.webSocketDebuggerUrl else { return false }
 
         let anchors = Self.anchorCandidates(for: hit)
         guard !anchors.isEmpty else { return false }
@@ -249,32 +250,41 @@ struct DoubaoAdapter: Sendable {
         })()
         """
 
-        let socket = URLSession.shared.webSocketTask(with: websocketURL)
-        socket.resume()
-        defer { socket.cancel(with: .normalClosure, reason: nil) }
-        let command: [String: Any] = [
-            "id": 1,
-            "method": "Runtime.evaluate",
-            "params": ["expression": expression, "returnByValue": true, "awaitPromise": true]
-        ]
-        let commandData = try JSONSerialization.data(withJSONObject: command)
-        try await socket.send(.data(commandData))
-
-        while true {
-            let message = try await socket.receive()
-            let data: Data
-            switch message {
-            case .data(let value): data = value
-            case .string(let value): data = Data(value.utf8)
-            @unknown default: continue
-            }
-            guard let object = try JSONSerialization.jsonObject(with: data) as? [String: Any],
-                  object["id"] as? Int == 1 else { continue }
-            let result = object["result"] as? [String: Any]
-            let remote = result?["result"] as? [String: Any]
-            let value = remote?["value"] as? [String: Any]
-            return value?["found"] as? Bool == true
+        // Chromium rejects URLSessionWebSocketTask's handshake in some Doubao
+        // desktop builds. Use the already-bundled Node runtime (also used by
+        // doubao-cli), whose WebSocket handshake is accepted by the CDP server.
+        let bridge = """
+        const [url, expression] = process.argv.slice(1);
+        const socket = new WebSocket(url);
+        const timer = setTimeout(() => { console.error('CDP timeout'); process.exit(2); }, 12000);
+        socket.addEventListener('open', () => socket.send(JSON.stringify({
+          id: 1,
+          method: 'Runtime.evaluate',
+          params: {expression, returnByValue: true, awaitPromise: true}
+        })));
+        socket.addEventListener('message', event => {
+          const message = JSON.parse(event.data);
+          if (message.id !== 1) return;
+          clearTimeout(timer);
+          console.log(JSON.stringify(message));
+          socket.close();
+        });
+        socket.addEventListener('error', () => { clearTimeout(timer); process.exit(3); });
+        """
+        let bundledNode = isolatedRoot.appendingPathComponent("node/bin/node").path
+        let command = FileManager.default.isExecutableFile(atPath: bundledNode)
+            ? [bundledNode, "-e", bridge, websocketURL, expression]
+            : ["/usr/bin/env", "node", "-e", bridge, websocketURL, expression]
+        let response = await Task.detached(priority: .userInitiated) { run(command) }.value
+        guard response.status == 0,
+              let data = response.output.data(using: .utf8),
+              let object = try JSONSerialization.jsonObject(with: data) as? [String: Any] else {
+            return false
         }
+        let result = object["result"] as? [String: Any]
+        let remote = result?["result"] as? [String: Any]
+        let value = remote?["value"] as? [String: Any]
+        return value?["found"] as? Bool == true
     }
 
     private func ensureCDP() throws {
